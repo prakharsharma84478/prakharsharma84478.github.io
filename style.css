@@ -1,0 +1,522 @@
+/* CSS STYLES */
+
+/* Add smooth scrolling and padding to offset the fixed header */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Adjust this to match your header height */
+}
+
+/* Basic setup for the whole page */
+body {
+    font-family: 'Inter', sans-serif; /* Use the modern Inter font */
+    background-color: #f0f2f5;
+    color: #1c1e21; /* A slightly softer black for text */
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* --- HEADER STYLES --- */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: transparent;
+    z-index: 1000;
+    box-sizing: border-box;
+    transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+/* Style for when the user scrolls down */
+.main-header.scrolled {
+    background-color: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2rem;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: #007bff;
+}
+
+/* --- END HEADER STYLES --- */
+
+
+/* A general container for centering content */
+.content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Styles for each major section of the page */
+.section {
+    min-height: 80vh; /* Make sections tall enough to demonstrate scrolling */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* New style for full-width grid sections */
+.section-full-width {
+    min-height: 80vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+
+/* Specific styling for the top "hero" section */
+.hero-section {
+    position: relative; /* Needed to position the video and content correctly */
+    text-align: center;
+    min-height: 100vh; /* Make the first section fill the screen */
+    border-bottom: none;
+    overflow: hidden; /* Prevents video from spilling out */
+    display: flex; /* Use flexbox to center content */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Styling for the background video */
+.hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures video covers the area without distortion */
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Places the video behind everything */
+    filter: brightness(0.6); /* Optional: Darkens the video to improve text contrast */
+}
+
+/* Styling for the watermark text */
+.hero-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12vw; /* Responsive font size based on viewport width */
+    font-weight: 900; /* Bolder font weight */
+    color: rgba(255, 255, 255, 0.1); /* White with very low opacity */
+    z-index: 0; /* Sits on top of the video but below the main content */
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: watermarkFadeInUp 1.2s 0.2s ease-out forwards;
+}
+
+
+/* Container for the hero content to place it above the video and watermark */
+.hero-content {
+    position: relative;
+    z-index: 1; /* Sits on top of the watermark */
+    color: white; /* Change text color to be visible on video */
+    text-shadow: 0 2px 8px rgba(0,0,0,0.7); /* Adds shadow for better readability */
+    opacity: 0;
+    animation: fadeInUp 1s 0.5s ease-out forwards;
+}
+
+/* --- SCROLL PROMPT STYLES --- */
+.scroll-prompt {
+    position: absolute;
+    bottom: 10rem; /* Increased this value to lift it from the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: promptFadeInUp 1s 1.2s ease-out forwards, bounce 2s infinite 2.2s;
+    z-index: 2;
+}
+
+.scroll-prompt svg {
+    width: 24px;
+    height: 24px;
+}
+
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+}
+
+/* Styling for the form elements */
+.form-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+input[type="email"] {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 280px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* --- NEW FEATURE SECTION STYLES --- */
+.feature-video-container {
+    height: 100%;
+    overflow: hidden;
+}
+
+.feature-video-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.feature-content-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    box-sizing: border-box;
+}
+
+.feature-content-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.category-item {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.category-header {
+    display: flex;
+    flex-direction: column; /* Stack icon and title */
+    align-items: center;   /* Center them horizontally */
+    gap: 0.5rem;           /* Adjust gap for vertical stacking */
+    margin-bottom: 0.75rem;
+}
+
+.category-icon {
+    background-color: #e7f1ff;
+    border-radius: 50%;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    animation: icon-bounce 2.5s infinite ease-in-out;
+}
+
+.category-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #007bff;
+}
+
+.category-item h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.category-item p {
+    margin: 0;
+    font-size: 1rem;
+    max-width: 100%;
+    text-align: center; /* Center the text */
+    color: #555;
+    padding-left: 0; /* Remove the alignment padding */
+}
+
+/* --- NEW FORM SECTION STYLES --- */
+.form-section {
+    text-align: center;
+}
+
+.form-section p {
+    margin-bottom: 3rem;
+}
+
+#feedback-form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 2.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.age-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.age-buttons button {
+    flex-grow: 1;
+    background-color: white;
+    color: #333;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.age-buttons button.selected {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.radio-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.radio-options label {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.radio-options input[type="radio"] {
+    margin-right: 1rem;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    min-height: 120px;
+    box-sizing: border-box;
+}
+
+.cta-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+}
+
+.secure-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.secure-message svg {
+    flex-shrink: 0;
+}
+
+/* --- DOWNLOAD MODAL STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.download-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.download-button {
+    display: block;
+    padding: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.download-button:hover {
+    transform: scale(1.03);
+}
+
+.download-button.ios { background-color: #000000; }
+.download-button.android { background-color: #3DDC84; }
+.download-button.windows { background-color: #0078D4; }
+
+
+/* --- THE MAGIC FOR DYNAMIC SCROLLING --- */
+.hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- KEYFRAME ANIMATIONS --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes watermarkFadeInUp {
+    from { opacity: 0; transform: translate(-50%, -45%) scale(0.98); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+    40% { transform: translateX(-50%) translateY(-10px); }
+    60% { transform: translateX(-50%) translateY(-5px); }
+}
+
+@keyframes promptFadeInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes icon-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 768px) {
+    .section-full-width {
+        grid-template-columns: 1fr;
+    }
+    .feature-video-container {
+        order: -1;
+        height: 300px; /* Give video a fixed height on mobile */
+    }
+    .feature-content-container {
+        padding: 2rem;
+    }
+    .feature-content-container h2 {
+        text-align: center;
+    }
+    .category-item p {
+        padding-left: 0; /* Reset padding for mobile */
+        text-align: center;
+    }
+    .category-header {
+        justify-content: center;
+    }
+}

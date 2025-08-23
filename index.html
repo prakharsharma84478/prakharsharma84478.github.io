@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitpixels - Dynamic Page</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="#home" class="logo">Fitpixels</a>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#feature-one">Our Product</a></li>
+                <li><a href="#transform">Transform</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- SECTION 1: The main view the user sees first -->
+    <section id="home" class="section hero-section">
+        <video autoplay loop muted playsinline class="hero-video">
+            <source src="C:\Users\Prakhar\Documents\Fit Pixels\Landing Page\10444089-uhd_3840_2160_30fps.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="content-wrapper hero-content">
+            <h1>Gamefy your fitness journey</h1>
+            <p>Revolutionary AI-powered fitness technology that adapts to your body movements</p>
+        </div>
+
+        <a href="#feature-one" class="scroll-prompt">
+            Scroll to Discover
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19V5M12 19L18 13M12 19L6 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </a>
+    </section>
+
+    <!-- SECTION 2: "Our Product" Section -->
+    <section id="feature-one" class="section-full-width hidden">
+        <div class="feature-video-container">
+            <video autoplay loop muted playsinline>
+                <source src="C:\Users\Prakhar\Documents\Fit Pixels\Landing Page\10444089-uhd_3840_2160_30fps.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="feature-content-container">
+            <div class="content-wrapper">
+                <h2>Our Product</h2>
+                <div class="category-list">
+                    <div class="category-item">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.9 4.9 1.4 1.4"/><path d="m17.7 17.7 1.4 1.4"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4.9 19.1 1.4-1.4"/><path d="m17.7 6.3 1.4-1.4"/></svg>
+                            </div>
+                            <h3>AI Personal Trainer</h3>
+                        </div>
+                        <p>Advanced machine learning algorithms analyze your form, track progress, and provide real-time coaching that adapts to your unique fitness level.</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 12h4"/><path d="M14 12h4"/><path d="M8 10v4"/><path d="M16 10v4"/></svg>
+                            </div>
+                            <h3>Multi-Platform</h3>
+                        </div>
+                        <p>Seamlessly play the game on your windows laptop, Android, or iOS device.</p>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-header">
+                            <div class="category-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </div>
+                            <h3>Community Power</h3>
+                        </div>
+                        <p>Join a thriving community of fitness enthusiasts and compete in challenges, and get motivated by others on similar journeys.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: "Ready to Transform?" Form Section -->
+    <section id="transform" class="section hidden">
+        <div class="content-wrapper form-section">
+            <h2>Ready to transform?</h2>
+            <p>Help us understand your fitness journey and get early access to our revolutionary platform.</p>
+            
+            <form id="feedback-form" target="hidden_iframe" method="POST">
+                <div class="form-group">
+                    <label>What's your age group?</label>
+                    <div class="age-buttons">
+                        <button type="button" data-value="18-25">18-25</button>
+                        <button type="button" data-value="26-35">26-35</button>
+                        <button type="button" data-value="36-45">36-45</button>
+                        <button type="button" data-value="45+">45+</button>
+                    </div>
+                    <input type="hidden" name="entry.327693157" id="age-group-input">
+                </div>
+
+                <div class="form-group">
+                    <label>How often do you workout?</label>
+                    <div class="radio-options">
+                        <label><input type="radio" name="entry.310060750" value="Daily (6-7 times per week)"> Daily (6-7 times per week)</label>
+                        <label><input type="radio" name="entry.310060750" value="Frequent (4-5 times per week)"> Frequent (4-5 times per week)</label>
+                        <label><input type="radio" name="entry.310060750" value="Moderate (2-3 times per week)"> Moderate (2-3 times per week)</label>
+                        <label><input type="radio" name="entry.310060750" value="Occasional (1-2 times per week)"> Occasional (1-2 times per week)</label>
+                        <label><input type="radio" name="entry.310060750" value="Just getting started"> Just getting started</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>What part of the concept did you really like?</label>
+                    <textarea name="entry.1200708340" placeholder="Share what excites you most about our fitness innovation..."></textarea>
+                </div>
+
+                <button type="submit" class="cta-button">Get Early Access</button>
+
+                <div class="secure-message">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Your information is secure and will only be used to provide you with early access updates.</span>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Hidden iframe for background form submission -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+    <!-- Download Links Modal -->
+    <div id="download-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="close-modal" class="close-button">&times;</button>
+            <h2>Thank You!</h2>
+            <p>Your feedback has been recorded. Get early access to Fitpixels now:</p>
+            <div class="download-links">
+                <a href="https://testflight.apple.com/join/WyGarSSx" class="download-button ios" target="_blank">Download for iOS</a>
+                <a href="https://play.google.com/apps/internaltest/4700725176302307453" class="download-button android" target="_blank">Download for Android</a>
+                <a href="https://apps.microsoft.com/detail/9pljrp40w840?ocid=webpdpshare&hl=en-US&gl=US" class="download-button windows" target="_blank">Download for Windows</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
