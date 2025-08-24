@@ -381,6 +381,13 @@ textarea {
     margin-top: 1rem;
 }
 
+.cta-button:disabled {
+    background-color: #a0cfff; /* Lighter blue when disabled */
+    cursor: not-allowed;
+    transform: none;
+}
+
+
 .secure-message {
     display: flex;
     align-items: center;
