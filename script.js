@@ -123,3 +123,79 @@ downloadModal.addEventListener('click', (e) => {
         closeModal();
     }
 });
+
+
+// --- JAVASCRIPT LOGIC FOR "READ MORE" ---
+document.addEventListener('DOMContentLoaded', () => {
+    const categoryItems = document.querySelectorAll('.category-item');
+    const collapsedHeight = 3.2 * 16; // Corresponds to 3.2em, assuming 1em = 16px
+
+    categoryItems.forEach(item => {
+        const p = item.querySelector('p');
+        
+        if (p && p.scrollHeight > collapsedHeight) {
+            p.classList.add('collapsed');
+
+            const readMoreBtn = document.createElement('span');
+            readMoreBtn.className = 'read-more-btn';
+            readMoreBtn.textContent = 'Read More';
+            item.appendChild(readMoreBtn);
+
+            readMoreBtn.addEventListener('click', () => {
+                p.classList.toggle('collapsed');
+                readMoreBtn.textContent = p.classList.contains('collapsed') ? 'Read More' : 'Read Less';
+            });
+        }
+    });
+});
+
+
+// --- JAVASCRIPT LOGIC FOR INTERACTIVE PANELS ---
+document.addEventListener('DOMContentLoaded', () => {
+    const featureSection = document.getElementById('feature-one');
+    if (!featureSection) return; // Guard clause
+
+    const panels = featureSection.querySelectorAll('.panel');
+    const demoVideo = featureSection.querySelector('.panel-video');
+    const motionAnimation = document.getElementById('motion-animation');
+    let isFeatureSectionVisible = false;
+
+    function setActivePanel(panelToActivate) {
+        panels.forEach(p => p.classList.remove('active'));
+        panelToActivate.classList.add('active');
+
+        if (panelToActivate.id === 'panel-video') {
+            if (demoVideo) demoVideo.play();
+            if (motionAnimation) motionAnimation.pause();
+        } else {
+            if (demoVideo) demoVideo.pause();
+            if (motionAnimation) motionAnimation.play();
+        }
+    }
+
+    panels.forEach(panel => {
+        panel.addEventListener('mouseenter', () => {
+            if (isFeatureSectionVisible) {
+                setActivePanel(panel);
+            }
+        });
+    });
+
+    const featureSectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                isFeatureSectionVisible = true;
+                const defaultPanel = document.getElementById('panel-animation');
+                if (defaultPanel) {
+                    setActivePanel(defaultPanel);
+                }
+            } else {
+                isFeatureSectionVisible = false;
+                if(demoVideo) demoVideo.pause();
+                if(motionAnimation) motionAnimation.pause();
+            }
+        });
+    }, { threshold: 0.75 });
+
+    featureSectionObserver.observe(featureSection);
+});

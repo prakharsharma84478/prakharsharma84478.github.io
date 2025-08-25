@@ -23,7 +23,6 @@
         </nav>
     </header>
 
-    <!-- SECTION 1: The main view the user sees first -->
     <section id="home" class="section hero-section">
         <video autoplay loop muted playsinline class="hero-video">
             <source src="https://github.com/prakharsharma84478/prakharsharma84478.github.io/raw/refs/heads/main/10444089-uhd_3840_2160_30fps.mp4?download=" type="video/mp4">
@@ -43,14 +42,36 @@
         </a>
     </section>
 
-    <!-- SECTION 2: "Our Product" Section -->
-    <section id="feature-one" class="section-full-width hidden">
-        <div class="feature-video-container">
-            <video autoplay loop muted playsinline>
-                <source src="https://github.com/prakharsharma84478/prakharsharma84478.github.io/raw/refs/heads/main/Demo%20Recording.mp4?download=" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <section id="feature-one" class="section-interactive-split hidden">
+
+        <div class="interactive-panels">
+            <div class="panel" id="panel-video">
+                <div class="panel-content">
+                    <h3>See It In Action</h3>
+                    <p>Watch a real-time demo of the Fitpixels experience.</p>
+                    <video loop muted playsinline class="panel-video">
+                        <source src="https://github.com/prakharsharma84478/prakharsharma84478.github.io/raw/refs/heads/main/Demo%20Recording.mp4?download=" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+            <div class="panel active" id="panel-animation">
+                <div class="panel-content">
+                    <h3>How It Works</h3>
+                    <p>Our AI analyzes your movement through your device's camera.</p>
+                    <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.js"></script>
+                    <dotlottie-player 
+                        id="motion-animation"
+                        src="https://lottie.host/e3427494-0819-4b88-826a-9f56a52ed257/zVuJkAmk1q.json" 
+                        background="transparent" 
+                        speed="1" 
+                        style="width: 100%; height: 100%;" 
+                        loop 
+                        autoplay>
+                    </dotlottie-player>
+                </div>
+            </div>
         </div>
+
         <div class="feature-content-container">
             <div class="content-wrapper">
                 <h2>Our Product</h2>
@@ -87,65 +108,63 @@
         </div>
     </section>
 
-    <!-- SECTION 3: "Ready to Transform?" Form Section -->
     <section id="transform" class="section hidden">
-        <div class="content-wrapper form-section">
-            <h2>Ready to transform?</h2>
-            <p>Help us understand your fitness journey and get early access to our revolutionary platform.</p>
-            
-            <form id="feedback-form" target="hidden_iframe" method="POST">
-                <div class="form-group">
-                    <label>What's your age group?</label>
-                    <div class="age-buttons">
-                        <button type="button" data-value="18-25">18-25</button>
-                        <button type="button" data-value="26-35">26-35</button>
-                        <button type="button" data-value="36-45">36-45</button>
-                        <button type="button" data-value="45+">45+</button>
+        <div class="form-card"> 
+            <div class="content-wrapper form-section">
+                <h2>Ready to transform?</h2>
+                <p>Help us understand your fitness journey and get early access to our revolutionary platform.</p>
+                
+                <form id="feedback-form" target="hidden_iframe" method="POST">
+                    <div class="form-group">
+                        <label>What's your age group?</label>
+                        <div class="age-buttons">
+                            <button type="button" data-value="18-25">18-25</button>
+                            <button type="button" data-value="26-35">26-35</button>
+                            <button type="button" data-value="36-45">36-45</button>
+                            <button type="button" data-value="45+">45+</button>
+                        </div>
+                        <input type="hidden" name="entry.327693157" id="age-group-input">
                     </div>
-                    <input type="hidden" name="entry.327693157" id="age-group-input">
-                </div>
 
-                <div class="form-group">
-                    <label>Are you interested in a mobile fitness game?</label>
-                    <div class="interest-buttons">
-                        <button type="button" data-value="Yes">Yes</button>
-                        <button type="button" data-value="No">No</button>
-                        <button type="button" data-value="Maybe">Maybe</button>
+                    <div class="form-group">
+                        <label>Are you interested in a mobile fitness game?</label>
+                        <div class="interest-buttons">
+                            <button type="button" data-value="Yes">Yes</button>
+                            <button type="button" data-value="No">No</button>
+                            <button type="button" data-value="Maybe">Maybe</button>
+                        </div>
+                        <input type="hidden" name="entry.1450637670" id="interest-input">
                     </div>
-                    <!-- IMPORTANT: You will need a new entry ID for this question -->
-                    <input type="hidden" name="entry.1450637670" id="interest-input">
-                </div>
 
-                <div class="form-group">
-                    <label>How often do you workout?</label>
-                    <div class="radio-options">
-                        <label><input type="radio" name="entry.310060750" value="Daily (6-7 times per week)"> Daily (6-7 times per week)</label>
-                        <label><input type="radio" name="entry.310060750" value="Frequent (4-5 times per week)"> Frequent (4-5 times per week)</label>
-                        <label><input type="radio" name="entry.310060750" value="Moderate (2-3 times per week)"> Moderate (2-3 times per week)</label>
-                        <label><input type="radio" name="entry.310060750" value="Occasional (1-2 times per week)"> Occasional (1-2 times per week)</label>
-                        <label><input type="radio" name="entry.310060750" value="Just getting started"> Just getting started</label>
+                    <div class="form-group">
+                        <label>How often do you workout?</label>
+                        <div class="radio-options">
+                            <label><input type="radio" name="entry.310060750" value="Daily (6-7 times per week)"> Daily (6-7 times per week)</label>
+                            <label><input type="radio" name="entry.310060750" value="Frequent (4-5 times per week)"> Frequent (4-5 times per week)</label>
+                            <label><input type="radio" name="entry.310060750" value="Moderate (2-3 times per week)"> Moderate (2-3 times per week)</label>
+                            <label><input type="radio" name="entry.310060750" value="Occasional (1-2 times per week)"> Occasional (1-2 times per week)</label>
+                            <label><input type="radio" name="entry.310060750" value="Just getting started"> Just getting started</label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label>What part of the concept did you really like?</label>
-                    <textarea name="entry.1200708340" id="feedback-textarea" placeholder="Share what excites you most about our fitness innovation..."></textarea>
-                </div>
+                    <div class="form-group">
+                        <label>What part of the concept did you really like?</label>
+                        <textarea name="entry.1200708340" id="feedback-textarea" placeholder="Share what excites you most about our fitness innovation..."></textarea>
+                    </div>
 
-                <button type="submit" class="cta-button" disabled>Get Early Access</button>
+                    <button type="submit" class="cta-button" disabled>Get Early Access</button>
 
-                <div class="secure-message">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span>Your information is secure and will only be used to provide you with early access updates.</span>
-                </div>
-            </form>
+                    <div class="secure-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>Your information is secure and will only be used to provide you with early access updates.</span>
+                    </div>
+                </form>
+            </div>
         </div>
     </section>
 
-    <!-- Hidden iframe for background form submission -->
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
-    <!-- Download Links Modal -->
     <div id="download-modal" class="modal-overlay">
         <div class="modal-content">
             <button id="close-modal" class="close-button">&times;</button>
