@@ -125,10 +125,12 @@ downloadModal.addEventListener('click', (e) => {
 });
 
 
-// --- JAVASCRIPT LOGIC FOR "READ MORE" ---
+// --- JAVASCRIPT LOGIC FOR "READ MORE" AND INTERACTIVE PANELS ---
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- "READ MORE" LOGIC ---
     const categoryItems = document.querySelectorAll('.category-item');
-    const collapsedHeight = 3.2 * 16; // Corresponds to 3.2em, assuming 1em = 16px
+    const collapsedHeight = 3.2 * 16; 
 
     categoryItems.forEach(item => {
         const p = item.querySelector('p');
@@ -147,11 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-});
 
-
-// --- JAVASCRIPT LOGIC FOR INTERACTIVE PANELS (Mobile Friendly) ---
-document.addEventListener('DOMContentLoaded', () => {
+    // --- INTERACTIVE PANELS LOGIC (REVISED FOR MOBILE) ---
     const featureSection = document.getElementById('feature-one');
     if (!featureSection) return; 
 
@@ -160,11 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const demoVideo = featureSection.querySelector('.panel-video');
     const motionAnimation = document.getElementById('motion-animation');
     let isFeatureSectionVisible = false;
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
-
         if (panelToActivate.id === 'panel-video') {
             if (demoVideo) demoVideo.play();
             if (motionAnimation) motionAnimation.pause();
@@ -180,43 +179,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if(motionAnimation) motionAnimation.pause();
     }
 
-    panels.forEach(panel => {
-        // For DESKTOP: Hover to expand
-        panel.addEventListener('mouseenter', () => {
-            if (window.innerWidth > 768 && isFeatureSectionVisible) {
-                setActivePanel(panel);
-            }
+    if (isTouchDevice) {
+        // --- MOBILE/TOUCH DEVICE LOGIC ---
+        panels.forEach(panel => {
+            panel.addEventListener('click', () => {
+                if (isFeatureSectionVisible) {
+                    if (panel.classList.contains('active')) {
+                        resetPanels();
+                    } else {
+                        setActivePanel(panel);
+                    }
+                }
+            });
         });
-
-        // For MOBILE/TOUCH: Tap to expand/collapse
-        panel.addEventListener('click', () => {
-            if (window.innerWidth <= 768 && isFeatureSectionVisible) {
-                if (panel.classList.contains('active')) {
-                    resetPanels();
-                } else {
+    } else {
+        // --- DESKTOP/MOUSE DEVICE LOGIC ---
+        panels.forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                if (isFeatureSectionVisible) {
                     setActivePanel(panel);
                 }
-            }
+            });
         });
-    });
 
-    // For DESKTOP: Mouse leaving the container resets it
-    if (panelsContainer) {
-        panelsContainer.addEventListener('mouseleave', () => {
-             if (window.innerWidth > 768 && isFeatureSectionVisible) {
-                resetPanels();
-             }
-        });
+        if (panelsContainer) {
+            panelsContainer.addEventListener('mouseleave', () => {
+                if (isFeatureSectionVisible) {
+                    // On desktop, reset to the default active panel
+                    const defaultPanel = document.getElementById('panel-animation');
+                    if (defaultPanel) setActivePanel(defaultPanel);
+                }
+            });
+        }
     }
 
+    // This observer checks if the feature section is on screen
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                const defaultPanel = document.getElementById('panel-animation');
-                // Set a default active panel only on desktop
-                if (window.innerWidth > 768 && defaultPanel) {
-                   setActivePanel(defaultPanel);
+                // On desktop, set a default active panel. On mobile, do nothing (50:50 split).
+                if (!isTouchDevice) {
+                    const defaultPanel = document.getElementById('panel-animation');
+                    if (defaultPanel) setActivePanel(defaultPanel);
                 }
             } else {
                 isFeatureSectionVisible = false;
