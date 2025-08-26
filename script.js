@@ -161,15 +161,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // This function now ONLY handles the CSS class for expansion
+    // UPDATED to handle video playback on tap for mobile
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
+
+        // On touch devices, play the video corresponding to the tapped panel
+        if (isTouchDevice) {
+            let videoToPlay = panelToActivate.querySelector('.panel-video');
+            if (videoToPlay) {
+                // Pause all videos first
+                if(demoVideo) demoVideo.pause();
+                if(howItWorksVideo) howItWorksVideo.pause();
+                // Play the target video
+                videoToPlay.play();
+            }
+        }
     }
     
-    // This function now ONLY handles the CSS class for collapsing
+    // UPDATED to pause videos on mobile when collapsed
     function resetPanels() {
         panels.forEach(p => p.classList.remove('active'));
+        // On mobile, pause videos to save resources when no panel is active
+        if (isTouchDevice) {
+            if (demoVideo) demoVideo.pause();
+            if (howItWorksVideo) howItWorksVideo.pause();
+        }
     }
 
     if (isTouchDevice) {
@@ -202,17 +219,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // The observer now controls ALL video playback
+    // The observer now controls video playback on DESKTOP ONLY
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // Play both videos when section is visible
-                if (demoVideo) demoVideo.play();
-                if (howItWorksVideo) howItWorksVideo.play();
+                // On desktop, play both videos when section is visible
+                if (!isTouchDevice) {
+                    if (demoVideo) demoVideo.play();
+                    if (howItWorksVideo) howItWorksVideo.play();
+                }
             } else {
                 isFeatureSectionVisible = false;
-                // Pause both videos when section is not visible
+                // Pause all videos when section is not visible
                 if (demoVideo) demoVideo.pause();
                 if (howItWorksVideo) howItWorksVideo.pause();
                 resetPanels(); // Also reset the panel visuals
