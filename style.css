@@ -247,10 +247,16 @@ h2 {
     width: 100%; height: 100%;
     object-fit: cover;
     z-index: -1;
-    opacity: 1;
+    opacity: 1; /* CHANGED: Set to 1 to make media always visible */
     transition: opacity 0.5s ease;
     filter: brightness(1.0);
 }
+
+/* DELETED this rule as it's no longer needed
+.panel.active .panel-video, .panel.active #motion-animation {
+    opacity: 1;
+}
+*/
 
 
 /* --- Styles for the right side of the split section (DARK THEME) --- */
@@ -260,19 +266,19 @@ h2 {
     justify-content: center;
     padding: 4rem;
     box-sizing: border-box;
-    background-color: #121212;
+    background-color: #121212; /* A very dark grey background */
 }
 
 .feature-content-container h2 {
     text-align: center;
     margin-bottom: 2rem;
-    color: #ffffff;
+    color: #ffffff; /* White text for readability */
 }
 
 .category-list { display: flex; flex-direction: column; gap: 1.5rem; }
 
 .category-item {
-    background-color: #1e1e1e;
+    background-color: #1e1e1e; /* Dark card background */
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 1.5rem;
     border-radius: 16px;
@@ -288,7 +294,7 @@ h2 {
 .category-header { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
 
 .category-icon {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1); /* Light icon background for contrast */
     border-radius: 50%;
     padding: 12px;
     display: flex;
@@ -380,34 +386,10 @@ textarea::placeholder { color: #d1d5db; }
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
     .section-interactive-split { grid-template-columns: 1fr; }
-    
     .interactive-panels {
-        height: 85vh; /* A bit taller for a better mobile experience */
+        height: 80vh;
         flex-direction: column;
     }
-
-    .panel {
-        /* Add transition for height for a smoother animation on mobile */
-        transition: height 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    
-    .panel:not(.active) {
-        flex-grow: 0; /* Turn off grow */
-        height: 100px; /* Give it a fixed collapsed height */
-    }
-
-    .panel.active {
-        flex-grow: 1; /* Allow it to grow and fill the rest of the space */
-        height: 100%;
-    }
-
-    /* Hide content in collapsed panel for a cleaner look and to prevent overflow */
-    .panel:not(.active) .panel-content {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0s 0.3s;
-    }
-    
     .feature-content-container { padding: 2rem; }
     .feature-content-container h2 { text-align: center; }
     .category-item p { padding-left: 0; text-align: center; }
