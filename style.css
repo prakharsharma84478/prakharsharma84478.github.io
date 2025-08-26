@@ -115,7 +115,7 @@ input, textarea {
     object-fit: cover; /* Ensures video covers the area without distortion */
     transform: translate(-50%, -50%);
     z-index: -1; /* Places the video behind everything */
-    filter: brightness(0.6); /* Optional: Darkens the video to improve text contrast */
+    filter: brightness(0.2); /* Optional: Darkens the video to improve text contrast */
 }
 
 /* Container for the hero content to place it above the video and watermark */
