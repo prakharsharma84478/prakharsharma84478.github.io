@@ -1,3 +1,11 @@
+// --- PRELOADER LOGIC ---
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.classList.add('hidden');
+    }
+});
+
 // --- JAVASCRIPT LOGIC TO SCROLL TO TOP ON PAGE LOAD ---
 if (history.scrollRestoration) {
     history.scrollRestoration = 'manual';
