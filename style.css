@@ -395,3 +395,7 @@ textarea::placeholder { color: #d1d5db; }
     .category-item p { padding-left: 0; text-align: center; }
     .category-header { justify-content: center; }
 }
+
+#howItWorksVideo {
+    object-fit: contain;
+}

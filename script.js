@@ -150,75 +150,75 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- INTERACTIVE PANELS LOGIC (CONTINUOUS PLAY) ---
+    // --- INTERACTIVE PANELS LOGIC (REVISED FOR 2 VIDEOS) ---
     const featureSection = document.getElementById('feature-one');
     if (!featureSection) return; 
 
     const panels = featureSection.querySelectorAll('.panel');
     const panelsContainer = featureSection.querySelector('.interactive-panels');
-    const demoVideo = featureSection.querySelector('.panel-video');
-    const motionAnimation = document.getElementById('motion-animation');
+    const demoVideo = document.getElementById('demoVideo');
+    const howItWorksVideo = document.getElementById('howItWorksVideo');
+    let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // These functions now ONLY handle adding/removing the .active class for visuals
+    // This function now ONLY handles the CSS class for expansion
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
     }
     
+    // This function now ONLY handles the CSS class for collapsing
     function resetPanels() {
         panels.forEach(p => p.classList.remove('active'));
     }
 
-    // Assign event listeners for VISUALS based on device type
     if (isTouchDevice) {
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
-                if (panel.classList.contains('active')) {
-                    resetPanels();
-                } else {
-                    setActivePanel(panel);
+                if (isFeatureSectionVisible) {
+                    if (panel.classList.contains('active')) {
+                        resetPanels();
+                    } else {
+                        setActivePanel(panel);
+                    }
                 }
             });
         });
     } else {
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
-                setActivePanel(panel);
+                if (isFeatureSectionVisible) {
+                    setActivePanel(panel);
+                }
             });
         });
 
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
-                resetPanels();
+                if (isFeatureSectionVisible) {
+                    resetPanels();
+                }
             });
         }
     }
 
-    // This observer handles all PLAYBACK logic
-    const playbackObserver = new IntersectionObserver((entries) => {
+    // The observer now controls ALL video playback
+    const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // Play both media when section is visible
+                isFeatureSectionVisible = true;
+                // Play both videos when section is visible
                 if (demoVideo) demoVideo.play();
-                if (motionAnimation) motionAnimation.play();
+                if (howItWorksVideo) howItWorksVideo.play();
             } else {
-                // Pause both media when section is not visible
+                isFeatureSectionVisible = false;
+                // Pause both videos when section is not visible
                 if (demoVideo) demoVideo.pause();
-                if (motionAnimation) motionAnimation.pause();
+                if (howItWorksVideo) howItWorksVideo.pause();
+                resetPanels(); // Also reset the panel visuals
             }
         });
-    }, { threshold: 0.1 }); // Start playing when 10% of the section is visible
+    }, { threshold: 0.75 });
 
-    playbackObserver.observe(featureSection);
-
-    // Set the initial VISUAL state when the page loads
-    if (isTouchDevice) {
-        // On mobile, start with everything 50:50
-        resetPanels(); 
-    } else {
-        // On desktop, start with the animation panel as the default active one
-        const defaultPanel = document.getElementById('panel-animation');
-        if (defaultPanel) setActivePanel(defaultPanel);
-    }
+    featureSectionObserver.observe(featureSection);
 });
