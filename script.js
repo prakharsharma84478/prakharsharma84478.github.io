@@ -179,8 +179,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if(motionAnimation) motionAnimation.pause();
     }
 
+    // Assign event listeners based on device type
     if (isTouchDevice) {
-        // --- MOBILE/TOUCH DEVICE LOGIC ---
+        // For MOBILE/TOUCH devices, use click to toggle panels
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
                 if (isFeatureSectionVisible) {
@@ -193,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     } else {
-        // --- DESKTOP/MOUSE DEVICE LOGIC ---
+        // For DESKTOP/MOUSE devices, use hover
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) {
@@ -205,9 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
                 if (isFeatureSectionVisible) {
-                    // On desktop, reset to the default active panel
-                    const defaultPanel = document.getElementById('panel-animation');
-                    if (defaultPanel) setActivePanel(defaultPanel);
+                    // Reset to 50:50 state when mouse leaves
+                    resetPanels();
                 }
             });
         }
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // On desktop, set a default active panel. On mobile, do nothing (50:50 split).
+                // On desktop, set a default active panel. On mobile, start at 50:50.
                 if (!isTouchDevice) {
                     const defaultPanel = document.getElementById('panel-animation');
                     if (defaultPanel) setActivePanel(defaultPanel);
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetPanels();
             }
         });
-    }, { threshold: 0.75 });
+    }, { threshold: 0.4 }); // CHANGED: Lowered threshold for better mobile activation
 
     featureSectionObserver.observe(featureSection);
 });
