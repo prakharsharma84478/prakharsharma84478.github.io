@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- INTERACTIVE PANELS LOGIC (REVISED FOR MOBILE) ---
+    // --- INTERACTIVE PANELS LOGIC (CONTINUOUS PLAY) ---
     const featureSection = document.getElementById('feature-one');
     if (!featureSection) return; 
 
@@ -158,77 +158,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const panelsContainer = featureSection.querySelector('.interactive-panels');
     const demoVideo = featureSection.querySelector('.panel-video');
     const motionAnimation = document.getElementById('motion-animation');
-    let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+    // These functions now ONLY handle adding/removing the .active class for visuals
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
-        if (panelToActivate.id === 'panel-video') {
-            if (demoVideo) demoVideo.play();
-            if (motionAnimation) motionAnimation.pause();
-        } else {
-            if (demoVideo) demoVideo.pause();
-            if (motionAnimation) motionAnimation.play();
-        }
     }
     
     function resetPanels() {
         panels.forEach(p => p.classList.remove('active'));
-        if(demoVideo) demoVideo.pause();
-        if(motionAnimation) motionAnimation.pause();
     }
 
-    // Assign event listeners based on device type
+    // Assign event listeners for VISUALS based on device type
     if (isTouchDevice) {
-        // For MOBILE/TOUCH devices, use click to toggle panels
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
-                if (isFeatureSectionVisible) {
-                    if (panel.classList.contains('active')) {
-                        resetPanels();
-                    } else {
-                        setActivePanel(panel);
-                    }
+                if (panel.classList.contains('active')) {
+                    resetPanels();
+                } else {
+                    setActivePanel(panel);
                 }
             });
         });
     } else {
-        // For DESKTOP/MOUSE devices, use hover
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
-                if (isFeatureSectionVisible) {
-                    setActivePanel(panel);
-                }
+                setActivePanel(panel);
             });
         });
 
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
-                if (isFeatureSectionVisible) {
-                    // Reset to 50:50 state when mouse leaves
-                    resetPanels();
-                }
+                resetPanels();
             });
         }
     }
 
-    // This observer checks if the feature section is on screen
-    const featureSectionObserver = new IntersectionObserver((entries) => {
+    // This observer handles all PLAYBACK logic
+    const playbackObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                isFeatureSectionVisible = true;
-                // On desktop, set a default active panel. On mobile, start at 50:50.
-                if (!isTouchDevice) {
-                    const defaultPanel = document.getElementById('panel-animation');
-                    if (defaultPanel) setActivePanel(defaultPanel);
-                }
+                // Play both media when section is visible
+                if (demoVideo) demoVideo.play();
+                if (motionAnimation) motionAnimation.play();
             } else {
-                isFeatureSectionVisible = false;
-                resetPanels();
+                // Pause both media when section is not visible
+                if (demoVideo) demoVideo.pause();
+                if (motionAnimation) motionAnimation.pause();
             }
         });
-    }, { threshold: 0.4 }); // CHANGED: Lowered threshold for better mobile activation
+    }, { threshold: 0.1 }); // Start playing when 10% of the section is visible
 
-    featureSectionObserver.observe(featureSection);
+    playbackObserver.observe(featureSection);
+
+    // Set the initial VISUAL state when the page loads
+    if (isTouchDevice) {
+        // On mobile, start with everything 50:50
+        resetPanels(); 
+    } else {
+        // On desktop, start with the animation panel as the default active one
+        const defaultPanel = document.getElementById('panel-animation');
+        if (defaultPanel) setActivePanel(defaultPanel);
+    }
 });
