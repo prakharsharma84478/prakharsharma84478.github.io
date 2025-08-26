@@ -197,7 +197,7 @@ h2 {
 
 .interactive-panels {
     display: flex;
-    flex-direction: row; /* CHANGED: This makes the collapse horizontal */
+    flex-direction: row; /* Horizontal on desktop */
     height: 100%;
 }
 
@@ -384,7 +384,10 @@ textarea::placeholder { color: #d1d5db; }
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
     .section-interactive-split { grid-template-columns: 1fr; }
-    .interactive-panels { height: 400px; }
+    .interactive-panels {
+        height: 400px;
+        flex-direction: column; /* ADDED: This stacks the panels vertically on mobile */
+    }
     .feature-content-container { padding: 2rem; }
     .feature-content-container h2 { text-align: center; }
     .category-item p { padding-left: 0; text-align: center; }

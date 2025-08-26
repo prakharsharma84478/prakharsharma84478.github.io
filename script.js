@@ -150,12 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// --- JAVASCRIPT LOGIC FOR INTERACTIVE PANELS ---
+// --- JAVASCRIPT LOGIC FOR INTERACTIVE PANELS (Mobile Friendly) ---
 document.addEventListener('DOMContentLoaded', () => {
     const featureSection = document.getElementById('feature-one');
-    if (!featureSection) return; // Guard clause
+    if (!featureSection) return; 
 
     const panels = featureSection.querySelectorAll('.panel');
+    const panelsContainer = featureSection.querySelector('.interactive-panels');
     const demoVideo = featureSection.querySelector('.panel-video');
     const motionAnimation = document.getElementById('motion-animation');
     let isFeatureSectionVisible = false;
@@ -172,27 +173,54 @@ document.addEventListener('DOMContentLoaded', () => {
             if (motionAnimation) motionAnimation.play();
         }
     }
+    
+    function resetPanels() {
+        panels.forEach(p => p.classList.remove('active'));
+        if(demoVideo) demoVideo.pause();
+        if(motionAnimation) motionAnimation.pause();
+    }
 
     panels.forEach(panel => {
+        // For DESKTOP: Hover to expand
         panel.addEventListener('mouseenter', () => {
-            if (isFeatureSectionVisible) {
+            if (window.innerWidth > 768 && isFeatureSectionVisible) {
                 setActivePanel(panel);
             }
         });
+
+        // For MOBILE/TOUCH: Tap to expand/collapse
+        panel.addEventListener('click', () => {
+            if (window.innerWidth <= 768 && isFeatureSectionVisible) {
+                if (panel.classList.contains('active')) {
+                    resetPanels();
+                } else {
+                    setActivePanel(panel);
+                }
+            }
+        });
     });
+
+    // For DESKTOP: Mouse leaving the container resets it
+    if (panelsContainer) {
+        panelsContainer.addEventListener('mouseleave', () => {
+             if (window.innerWidth > 768 && isFeatureSectionVisible) {
+                resetPanels();
+             }
+        });
+    }
 
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
                 const defaultPanel = document.getElementById('panel-animation');
-                if (defaultPanel) {
-                    setActivePanel(defaultPanel);
+                // Set a default active panel only on desktop
+                if (window.innerWidth > 768 && defaultPanel) {
+                   setActivePanel(defaultPanel);
                 }
             } else {
                 isFeatureSectionVisible = false;
-                if(demoVideo) demoVideo.pause();
-                if(motionAnimation) motionAnimation.pause();
+                resetPanels();
             }
         });
     }, { threshold: 0.75 });
