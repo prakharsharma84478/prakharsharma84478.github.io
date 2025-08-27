@@ -181,45 +181,58 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners for Mobile vs Desktop ---
 
     if (isTouchDevice) {
-        // MOBILE: Click to expand/collapse
+        // MOBILE: Click to expand/collapse and play/pause
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
                 if (!isFeatureSectionVisible) return;
 
                 const isActive = panel.classList.contains('active');
+                const video = panel.querySelector('.panel-video');
+
                 if (isActive) {
                     resetPanels();
+                    pauseVideo(video);
                 } else {
+                    pauseVideo(demoVideo);
+                    pauseVideo(howItWorksVideo);
                     setActivePanel(panel);
+                    playVideo(video);
                 }
             });
         });
     } else {
-        // DESKTOP: Hover to expand/collapse
+        // DESKTOP: Hover to play and expand
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
-                if (isFeatureSectionVisible) setActivePanel(panel);
+                if (isFeatureSectionVisible) {
+                    setActivePanel(panel);
+                    const videoToPlay = panel.querySelector('.panel-video');
+                    playVideo(videoToPlay);
+                }
             });
         });
+        
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
-                if (isFeatureSectionVisible) resetPanels();
+                if (isFeatureSectionVisible) {
+                    resetPanels();
+                    // Pause both videos when mouse leaves the container
+                    pauseVideo(demoVideo);
+                    pauseVideo(howItWorksVideo);
+                }
             });
         }
     }
 
-    // --- Master Observer for Visibility and Playback ---
+    // --- Master Observer for Visibility ---
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // THIS IS THE CHANGE: Autoplay on ALL devices when section is visible.
-                // Muted videos are allowed to autoplay in most modern browsers.
-                playVideo(demoVideo);
-                playVideo(howItWorksVideo);
+                // Videos are now only played on hover/tap, not on scroll
             } else {
                 isFeatureSectionVisible = false;
-                // When not visible, pause everything on all devices.
+                // When not visible, pause everything and reset visuals.
                 pauseVideo(demoVideo);
                 pauseVideo(howItWorksVideo);
                 resetPanels();
