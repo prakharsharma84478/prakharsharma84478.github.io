@@ -160,15 +160,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // Helper functions for playback and visuals
-    function playVideo(video) {
-        if (video) video.play().catch(e => console.error("Video play failed:", e));
+    // A robust function to handle video playback that won't crash the script.
+    async function playVideo(videoElement) {
+        if (!videoElement) return;
+        try {
+            await videoElement.play();
+        } catch (error) {
+            // This catches errors when a browser blocks autoplay and prevents the script from stopping.
+            console.log("Autoplay was prevented by the browser.", error);
+        }
     }
 
-    function pauseVideo(video) {
-        if (video) video.pause();
-    }
-    
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
@@ -178,24 +180,28 @@ document.addEventListener('DOMContentLoaded', () => {
         panels.forEach(p => p.classList.remove('active'));
     }
 
-    // --- Event Listeners for Mobile vs Desktop ---
+    // CLICK/TAP logic for ALL devices
+    panels.forEach(panel => {
+        panel.addEventListener('click', () => {
+            if (!isFeatureSectionVisible) return;
+            
+            const video = panel.querySelector('.panel-video');
+            if (video && video.paused) {
+                playVideo(video); // Use the new robust function to play on tap
+            }
 
-    if (isTouchDevice) {
-        // MOBILE: Click to expand/collapse
-        panels.forEach(panel => {
-            panel.addEventListener('click', () => {
-                if (!isFeatureSectionVisible) return;
-
-                const isActive = panel.classList.contains('active');
-                if (isActive) {
+            if (panel.classList.contains('active')) {
+                if (isTouchDevice) {
                     resetPanels();
-                } else {
-                    setActivePanel(panel);
                 }
-            });
+            } else {
+                setActivePanel(panel);
+            }
         });
-    } else {
-        // DESKTOP: Hover to expand/collapse
+    });
+
+    // HOVER logic for non-touch devices ONLY
+    if (!isTouchDevice) {
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) setActivePanel(panel);
@@ -208,20 +214,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Master Observer for Visibility and Playback ---
+    // This observer handles visibility and video playback for ALL devices.
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // THIS IS THE CHANGE: Autoplay on ALL devices when section is visible.
-                // Muted videos are allowed to autoplay in most modern browsers.
+                // Attempt to play videos. This will work on desktop.
+                // It will be ignored by most mobile browsers until a user taps, which is correct.
                 playVideo(demoVideo);
                 playVideo(howItWorksVideo);
             } else {
                 isFeatureSectionVisible = false;
-                // When not visible, pause everything on all devices.
-                pauseVideo(demoVideo);
-                pauseVideo(howItWorksVideo);
+                if (demoVideo) demoVideo.pause();
+                if (howItWorksVideo) howItWorksVideo.pause();
                 resetPanels();
             }
         });
