@@ -181,28 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners for Mobile vs Desktop ---
 
     if (isTouchDevice) {
-        // MOBILE: Click to play and expand
+        // MOBILE: Click to expand/collapse
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
                 if (!isFeatureSectionVisible) return;
 
-                const video = panel.querySelector('.panel-video');
                 const isActive = panel.classList.contains('active');
-
                 if (isActive) {
                     resetPanels();
-                    pauseVideo(video);
                 } else {
-                    // Pause all videos before playing the new one
-                    pauseVideo(demoVideo);
-                    pauseVideo(howItWorksVideo);
                     setActivePanel(panel);
-                    playVideo(video);
                 }
             });
         });
     } else {
-        // DESKTOP: Hover to expand (videos are already playing via observer)
+        // DESKTOP: Hover to expand/collapse
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) setActivePanel(panel);
@@ -220,14 +213,13 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // On DESKTOP, autoplay both videos for the continuous playback effect.
-                if (!isTouchDevice) {
-                    playVideo(demoVideo);
-                    playVideo(howItWorksVideo);
-                }
+                // THIS IS THE CHANGE: Autoplay on ALL devices when section is visible.
+                // Muted videos are allowed to autoplay in most modern browsers.
+                playVideo(demoVideo);
+                playVideo(howItWorksVideo);
             } else {
                 isFeatureSectionVisible = false;
-                // When section is not visible, pause everything on all devices.
+                // When not visible, pause everything on all devices.
                 pauseVideo(demoVideo);
                 pauseVideo(howItWorksVideo);
                 resetPanels();
