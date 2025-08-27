@@ -29,13 +29,12 @@ window.addEventListener('scroll', () => {
 // --- JAVASCRIPT LOGIC FOR SMOOTH SCROLL WITHOUT FOCUS ---
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault(); // Prevent the default link behavior (and focus)
+        e.preventDefault();
 
         const targetId = this.getAttribute('href');
         const targetElement = document.querySelector(targetId);
 
         if (targetElement) {
-            // Manually scroll to the element
             targetElement.scrollIntoView({
                 behavior: 'smooth'
             });
@@ -119,13 +118,11 @@ feedbackForm.addEventListener('submit', (e) => {
     }, 500);
 });
 
-// Logic to close the modal
 function closeModal() {
     downloadModal.style.display = 'none';
 }
 
 closeModalBtn.addEventListener('click', closeModal);
-
 downloadModal.addEventListener('click', (e) => {
     if (e.target === downloadModal) {
         closeModal();
@@ -136,21 +133,15 @@ downloadModal.addEventListener('click', (e) => {
 // --- JAVASCRIPT LOGIC FOR "READ MORE" AND INTERACTIVE PANELS ---
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- "READ MORE" LOGIC ---
     const categoryItems = document.querySelectorAll('.category-item');
-    const collapsedHeight = 3.2 * 16; 
-
     categoryItems.forEach(item => {
         const p = item.querySelector('p');
-        
-        if (p && p.scrollHeight > collapsedHeight) {
+        if (p && p.scrollHeight > (3.2 * 16)) {
             p.classList.add('collapsed');
-
             const readMoreBtn = document.createElement('span');
             readMoreBtn.className = 'read-more-btn';
             readMoreBtn.textContent = 'Read More';
             item.appendChild(readMoreBtn);
-
             readMoreBtn.addEventListener('click', () => {
                 p.classList.toggle('collapsed');
                 readMoreBtn.textContent = p.classList.contains('collapsed') ? 'Read More' : 'Read Less';
@@ -158,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- INTERACTIVE PANELS LOGIC (REVISED FOR 2 VIDEOS) ---
+    // --- INTERACTIVE PANELS LOGIC ---
     const featureSection = document.getElementById('feature-one');
     if (!featureSection) return; 
 
@@ -169,80 +160,74 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // UPDATED to handle video playback on tap for mobile
+    // A robust function to handle video playback that won't crash the script.
+    async function playVideo(videoElement) {
+        if (!videoElement) return;
+        try {
+            await videoElement.play();
+        } catch (error) {
+            // This catches errors when a browser blocks autoplay and prevents the script from stopping.
+            console.log("Autoplay was prevented by the browser.", error);
+        }
+    }
+
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
-
-        // On touch devices, play the video corresponding to the tapped panel
-        if (isTouchDevice) {
-            let videoToPlay = panelToActivate.querySelector('.panel-video');
-            if (videoToPlay) {
-                // Pause all videos first
-                if(demoVideo) demoVideo.pause();
-                if(howItWorksVideo) howItWorksVideo.pause();
-                // Play the target video
-                videoToPlay.play();
-            }
-        }
     }
     
-    // UPDATED to pause videos on mobile when collapsed
     function resetPanels() {
         panels.forEach(p => p.classList.remove('active'));
-        // On mobile, pause videos to save resources when no panel is active
-        if (isTouchDevice) {
-            if (demoVideo) demoVideo.pause();
-            if (howItWorksVideo) howItWorksVideo.pause();
-        }
     }
 
-    if (isTouchDevice) {
-        panels.forEach(panel => {
-            panel.addEventListener('click', () => {
-                if (isFeatureSectionVisible) {
-                    if (panel.classList.contains('active')) {
-                        resetPanels();
-                    } else {
-                        setActivePanel(panel);
-                    }
-                }
-            });
-        });
-    } else {
-        panels.forEach(panel => {
-            panel.addEventListener('mouseenter', () => {
-                if (isFeatureSectionVisible) {
-                    setActivePanel(panel);
-                }
-            });
-        });
+    // CLICK/TAP logic for ALL devices
+    panels.forEach(panel => {
+        panel.addEventListener('click', () => {
+            if (!isFeatureSectionVisible) return;
+            
+            const video = panel.querySelector('.panel-video');
+            if (video && video.paused) {
+                playVideo(video); // Use the new robust function to play on tap
+            }
 
-        if (panelsContainer) {
-            panelsContainer.addEventListener('mouseleave', () => {
-                if (isFeatureSectionVisible) {
+            if (panel.classList.contains('active')) {
+                if (isTouchDevice) {
                     resetPanels();
                 }
+            } else {
+                setActivePanel(panel);
+            }
+        });
+    });
+
+    // HOVER logic for non-touch devices ONLY
+    if (!isTouchDevice) {
+        panels.forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                if (isFeatureSectionVisible) setActivePanel(panel);
+            });
+        });
+        if (panelsContainer) {
+            panelsContainer.addEventListener('mouseleave', () => {
+                if (isFeatureSectionVisible) resetPanels();
             });
         }
     }
 
-    // The observer now controls video playback on DESKTOP ONLY
+    // This observer handles visibility and video playback for ALL devices.
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // On desktop, play both videos when section is visible
-                if (!isTouchDevice) {
-                    if (demoVideo) demoVideo.play();
-                    if (howItWorksVideo) howItWorksVideo.play();
-                }
+                // Attempt to play videos. This will work on desktop.
+                // It will be ignored by most mobile browsers until a user taps, which is correct.
+                playVideo(demoVideo);
+                playVideo(howItWorksVideo);
             } else {
                 isFeatureSectionVisible = false;
-                // Pause all videos when section is not visible
                 if (demoVideo) demoVideo.pause();
                 if (howItWorksVideo) howItWorksVideo.pause();
-                resetPanels(); // Also reset the panel visuals
+                resetPanels();
             }
         });
     }, { threshold: 0.75 });
