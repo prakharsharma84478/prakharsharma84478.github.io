@@ -160,45 +160,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
+    // Helper functions for playback and visuals
+    function playVideo(video) {
+        if (video) video.play().catch(e => console.error("Video play failed:", e));
+    }
+
+    function pauseVideo(video) {
+        if (video) video.pause();
+    }
+    
     function setActivePanel(panelToActivate) {
-        // Pause all videos first to ensure only one plays.
-        if (demoVideo) demoVideo.pause();
-        if (howItWorksVideo) howItWorksVideo.pause();
-
-        // Find the video in the panel we want to activate.
-        const videoToPlay = panelToActivate.querySelector('.panel-video');
-        if (videoToPlay) {
-            // This direct play() call is required by mobile browsers on user interaction.
-            videoToPlay.play().catch(error => {
-                console.error("Video play failed:", error);
-            });
-        }
-
-        // Handle the visual change.
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
     }
     
     function resetPanels() {
-        if (demoVideo) demoVideo.pause();
-        if (howItWorksVideo) howItWorksVideo.pause();
         panels.forEach(p => p.classList.remove('active'));
     }
 
-    // CLICK logic for touch devices (mobile)
+    // --- Event Listeners for Mobile vs Desktop ---
+
     if (isTouchDevice) {
+        // MOBILE: Click to play and expand
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
                 if (!isFeatureSectionVisible) return;
-                
-                if (panel.classList.contains('active')) {
+
+                const video = panel.querySelector('.panel-video');
+                const isActive = panel.classList.contains('active');
+
+                if (isActive) {
                     resetPanels();
+                    pauseVideo(video);
                 } else {
+                    // Pause all videos before playing the new one
+                    pauseVideo(demoVideo);
+                    pauseVideo(howItWorksVideo);
                     setActivePanel(panel);
+                    playVideo(video);
                 }
             });
         });
-    } else { // HOVER logic for non-touch devices (desktop)
+    } else {
+        // DESKTOP: Hover to expand (videos are already playing via observer)
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) setActivePanel(panel);
@@ -211,16 +215,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Master Observer for Visibility and Playback ---
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // On desktop, we want continuous playback. Setting a default active panel achieves this.
-                if (!isTouchDevice && panels.length > 0) {
-                   setActivePanel(panels[0]); // Autoplay the first video on desktop
+                // On DESKTOP, autoplay both videos for the continuous playback effect.
+                if (!isTouchDevice) {
+                    playVideo(demoVideo);
+                    playVideo(howItWorksVideo);
                 }
             } else {
                 isFeatureSectionVisible = false;
+                // When section is not visible, pause everything on all devices.
+                pauseVideo(demoVideo);
+                pauseVideo(howItWorksVideo);
                 resetPanels();
             }
         });
