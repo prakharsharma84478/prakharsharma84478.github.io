@@ -160,49 +160,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // A robust function to handle video playback that won't crash the script.
-    async function playVideo(videoElement) {
-        if (!videoElement) return;
-        try {
-            await videoElement.play();
-        } catch (error) {
-            // This catches errors when a browser blocks autoplay and prevents the script from stopping.
-            console.log("Autoplay was prevented by the browser.", error);
-        }
-    }
-
     function setActivePanel(panelToActivate) {
+        // Pause all videos first to ensure only one plays.
+        if (demoVideo) demoVideo.pause();
+        if (howItWorksVideo) howItWorksVideo.pause();
+
+        // Find the video in the panel we want to activate.
+        const videoToPlay = panelToActivate.querySelector('.panel-video');
+        if (videoToPlay) {
+            // This direct play() call is required by mobile browsers on user interaction.
+            videoToPlay.play().catch(error => {
+                console.error("Video play failed:", error);
+            });
+        }
+
+        // Handle the visual change.
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
     }
     
     function resetPanels() {
+        if (demoVideo) demoVideo.pause();
+        if (howItWorksVideo) howItWorksVideo.pause();
         panels.forEach(p => p.classList.remove('active'));
     }
 
-    // CLICK/TAP logic for ALL devices
-    panels.forEach(panel => {
-        panel.addEventListener('click', () => {
-            if (!isFeatureSectionVisible) return;
-            
-            // On mobile, this click is what starts the video
-            const video = panel.querySelector('.panel-video');
-            if (video && video.paused) {
-                playVideo(video);
-            }
-
-            if (panel.classList.contains('active')) {
-                if (isTouchDevice) {
+    // CLICK logic for touch devices (mobile)
+    if (isTouchDevice) {
+        panels.forEach(panel => {
+            panel.addEventListener('click', () => {
+                if (!isFeatureSectionVisible) return;
+                
+                if (panel.classList.contains('active')) {
                     resetPanels();
+                } else {
+                    setActivePanel(panel);
                 }
-            } else {
-                setActivePanel(panel);
-            }
+            });
         });
-    });
-
-    // HOVER logic for non-touch devices ONLY
-    if (!isTouchDevice) {
+    } else { // HOVER logic for non-touch devices (desktop)
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) setActivePanel(panel);
@@ -215,19 +211,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // This observer handles visibility and video playback for ALL devices.
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // THIS IS THE RESTORED LOGIC: Attempt to play videos when section is visible.
-                // This provides the desired continuous playback on desktop.
-                playVideo(demoVideo);
-                playVideo(howItWorksVideo);
+                // On desktop, we want continuous playback. Setting a default active panel achieves this.
+                if (!isTouchDevice && panels.length > 0) {
+                   setActivePanel(panels[0]); // Autoplay the first video on desktop
+                }
             } else {
                 isFeatureSectionVisible = false;
-                if (demoVideo) demoVideo.pause();
-                if (howItWorksVideo) howItWorksVideo.pause();
                 resetPanels();
             }
         });
