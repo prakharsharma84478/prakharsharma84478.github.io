@@ -1,11 +1,3 @@
-// --- PRELOADER LOGIC ---
-window.addEventListener('load', () => {
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        preloader.classList.add('hidden');
-    }
-});
-
 // --- JAVASCRIPT LOGIC TO SCROLL TO TOP ON PAGE LOAD ---
 if (history.scrollRestoration) {
     history.scrollRestoration = 'manual';
@@ -29,12 +21,13 @@ window.addEventListener('scroll', () => {
 // --- JAVASCRIPT LOGIC FOR SMOOTH SCROLL WITHOUT FOCUS ---
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent the default link behavior (and focus)
 
         const targetId = this.getAttribute('href');
         const targetElement = document.querySelector(targetId);
 
         if (targetElement) {
+            // Manually scroll to the element
             targetElement.scrollIntoView({
                 behavior: 'smooth'
             });
@@ -118,11 +111,13 @@ feedbackForm.addEventListener('submit', (e) => {
     }, 500);
 });
 
+// Logic to close the modal
 function closeModal() {
     downloadModal.style.display = 'none';
 }
 
 closeModalBtn.addEventListener('click', closeModal);
+
 downloadModal.addEventListener('click', (e) => {
     if (e.target === downloadModal) {
         closeModal();
@@ -133,15 +128,21 @@ downloadModal.addEventListener('click', (e) => {
 // --- JAVASCRIPT LOGIC FOR "READ MORE" AND INTERACTIVE PANELS ---
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- "READ MORE" LOGIC ---
     const categoryItems = document.querySelectorAll('.category-item');
+    const collapsedHeight = 3.2 * 16; 
+
     categoryItems.forEach(item => {
         const p = item.querySelector('p');
-        if (p && p.scrollHeight > (3.2 * 16)) {
+        
+        if (p && p.scrollHeight > collapsedHeight) {
             p.classList.add('collapsed');
+
             const readMoreBtn = document.createElement('span');
             readMoreBtn.className = 'read-more-btn';
             readMoreBtn.textContent = 'Read More';
             item.appendChild(readMoreBtn);
+
             readMoreBtn.addEventListener('click', () => {
                 p.classList.toggle('collapsed');
                 readMoreBtn.textContent = p.classList.contains('collapsed') ? 'Read More' : 'Read Less';
@@ -149,26 +150,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- INTERACTIVE PANELS LOGIC ---
+    // --- INTERACTIVE PANELS LOGIC (CONTINUOUS PLAY) ---
     const featureSection = document.getElementById('feature-one');
     if (!featureSection) return; 
 
     const panels = featureSection.querySelectorAll('.panel');
     const panelsContainer = featureSection.querySelector('.interactive-panels');
-    const demoVideo = document.getElementById('demoVideo');
-    const howItWorksVideo = document.getElementById('howItWorksVideo');
-    let isFeatureSectionVisible = false;
+    const demoVideo = featureSection.querySelector('.panel-video');
+    const motionAnimation = document.getElementById('motion-animation');
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // Helper functions for playback and visuals
-    function playVideo(video) {
-        if (video) video.play().catch(e => console.error("Video play failed:", e));
-    }
-
-    function pauseVideo(video) {
-        if (video) video.pause();
-    }
-    
+    // These functions now ONLY handle adding/removing the .active class for visuals
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
@@ -178,16 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
         panels.forEach(p => p.classList.remove('active'));
     }
 
-    // --- Event Listeners for Mobile vs Desktop ---
-
+    // Assign event listeners for VISUALS based on device type
     if (isTouchDevice) {
-        // MOBILE: Click to expand/collapse
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
-                if (!isFeatureSectionVisible) return;
-
-                const isActive = panel.classList.contains('active');
-                if (isActive) {
+                if (panel.classList.contains('active')) {
                     resetPanels();
                 } else {
                     setActivePanel(panel);
@@ -195,37 +182,43 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     } else {
-        // DESKTOP: Hover to expand/collapse
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
-                if (isFeatureSectionVisible) setActivePanel(panel);
+                setActivePanel(panel);
             });
         });
+
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
-                if (isFeatureSectionVisible) resetPanels();
+                resetPanels();
             });
         }
     }
 
-    // --- Master Observer for Visibility and Playback ---
-    const featureSectionObserver = new IntersectionObserver((entries) => {
+    // This observer handles all PLAYBACK logic
+    const playbackObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                isFeatureSectionVisible = true;
-                // THIS IS THE CHANGE: Autoplay on ALL devices when section is visible.
-                // Muted videos are allowed to autoplay in most modern browsers.
-                playVideo(demoVideo);
-                playVideo(howItWorksVideo);
+                // Play both media when section is visible
+                if (demoVideo) demoVideo.play();
+                if (motionAnimation) motionAnimation.play();
             } else {
-                isFeatureSectionVisible = false;
-                // When not visible, pause everything on all devices.
-                pauseVideo(demoVideo);
-                pauseVideo(howItWorksVideo);
-                resetPanels();
+                // Pause both media when section is not visible
+                if (demoVideo) demoVideo.pause();
+                if (motionAnimation) motionAnimation.pause();
             }
         });
-    }, { threshold: 0.75 });
+    }, { threshold: 0.1 }); // Start playing when 10% of the section is visible
 
-    featureSectionObserver.observe(featureSection);
+    playbackObserver.observe(featureSection);
+
+    // Set the initial VISUAL state when the page loads
+    if (isTouchDevice) {
+        // On mobile, start with everything 50:50
+        resetPanels(); 
+    } else {
+        // On desktop, start with the animation panel as the default active one
+        const defaultPanel = document.getElementById('panel-animation');
+        if (defaultPanel) setActivePanel(defaultPanel);
+    }
 });
