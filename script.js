@@ -185,9 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
         panel.addEventListener('click', () => {
             if (!isFeatureSectionVisible) return;
             
+            // On mobile, this click is what starts the video
             const video = panel.querySelector('.panel-video');
             if (video && video.paused) {
-                playVideo(video); // Use the new robust function to play on tap
+                playVideo(video);
             }
 
             if (panel.classList.contains('active')) {
@@ -219,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // Attempt to play videos. This will work on desktop.
-                // It will be ignored by most mobile browsers until a user taps, which is correct.
+                // THIS IS THE RESTORED LOGIC: Attempt to play videos when section is visible.
+                // This provides the desired continuous playback on desktop.
                 playVideo(demoVideo);
                 playVideo(howItWorksVideo);
             } else {
