@@ -443,3 +443,10 @@ textarea::placeholder { color: #d1d5db; }
         transform: rotate(360deg);
     }
 }
+
+#howItWorksVideo {
+    object-fit: contain;
+}
+#demoVideo {
+    object-fit: contain;
+}
