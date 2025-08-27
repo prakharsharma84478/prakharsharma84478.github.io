@@ -418,6 +418,9 @@ textarea::placeholder { color: #d1d5db; }
 #howItWorksVideo {
     object-fit: contain;
 }
+#demoVideo {
+    object-fit: contain;
+}
 
 /* --- PRELOADER STYLES --- */
 #preloader {

@@ -169,25 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFeatureSectionVisible = false;
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-    // UPDATED to handle video playback on tap for mobile
     function setActivePanel(panelToActivate) {
         panels.forEach(p => p.classList.remove('active'));
         panelToActivate.classList.add('active');
 
         // On touch devices, play the video corresponding to the tapped panel
-        if (isTouchDevice) {
-            let videoToPlay = panelToActivate.querySelector('.panel-video');
-            if (videoToPlay) {
-                // Pause all videos first
-                if(demoVideo) demoVideo.pause();
-                if(howItWorksVideo) howItWorksVideo.pause();
-                // Play the target video
-                videoToPlay.play();
-            }
+        const videoToPlay = panelToActivate.querySelector('.panel-video');
+        if (isTouchDevice && videoToPlay) {
+            // Pause all videos first
+            if(demoVideo) demoVideo.pause();
+            if(howItWorksVideo) howItWorksVideo.pause();
+            // Play the target video
+            videoToPlay.play();
         }
     }
     
-    // UPDATED to pause videos on mobile when collapsed
     function resetPanels() {
         panels.forEach(p => p.classList.remove('active'));
         // On mobile, pause videos to save resources when no panel is active
@@ -209,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-    } else {
+    } else { // Desktop logic
         panels.forEach(panel => {
             panel.addEventListener('mouseenter', () => {
                 if (isFeatureSectionVisible) {
@@ -227,12 +223,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // The observer now controls video playback on DESKTOP ONLY
+    // This observer now controls visibility and playback for ALL devices
     const featureSectionObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // On desktop, play both videos when section is visible
+                // On desktop, play both videos automatically
                 if (!isTouchDevice) {
                     if (demoVideo) demoVideo.play();
                     if (howItWorksVideo) howItWorksVideo.play();
