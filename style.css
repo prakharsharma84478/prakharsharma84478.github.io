@@ -208,10 +208,11 @@ h2 {
     position: relative;
     cursor: pointer;
     transition: flex-grow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background-color: #000;
 }
 
 .panel.active {
-    flex-grow: 10;
+    flex-grow: 5;
 }
 
 .panel-content {
@@ -242,12 +243,12 @@ h2 {
 .panel-content::after { content: ''; position: absolute; bottom: 1rem; left: 2rem; height: 3px; background-color: white; width: 0; transition: width 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); }
 .panel.active .panel-content::after { width: calc(100% - 4rem); }
 
-.panel-video, #motion-animation {
+.panel-video {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
     object-fit: cover;
-    z-index: 0;
+    z-index: 0; /* Correct z-index */
     opacity: 1;
     transition: opacity 0.5s ease;
     filter: brightness(1.0);
@@ -380,46 +381,18 @@ textarea::placeholder { color: #d1d5db; }
 
 /* --- RESPONSIVE ADJUSTMENTS --- */
 @media (max-width: 768px) {
-    .section-interactive-split { grid-template-columns: 1fr; }
+    .section-interactive-split { 
+        grid-template-columns: 1fr; 
+    }
     
     .interactive-panels {
-        height: 85vh; /* A bit taller for a better mobile experience */
         flex-direction: column;
+        height: 85vh;
     }
 
-    .panel {
-        flex-basis: auto; /* This is the critical fix */
-        /* Add transition for height for a smoother animation on mobile */
-        transition: height 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), flex-grow 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    #howItWorksVideo, #demoVideo {
+        object-fit: contain;
     }
-    
-    .panel:not(.active) {
-        flex-grow: 0; /* Turn off grow */
-        height: 100px; /* Give it a fixed collapsed height */
-    }
-
-    .panel.active {
-        flex-grow: 1; /* Allow it to grow and fill the rest of the space */
-        height: 100%;
-    }
-
-    .panel:not(.active) .panel-content {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0s 0.3s;
-    }
-    
-    .feature-content-container { padding: 2rem; }
-    .feature-content-container h2 { text-align: center; }
-    .category-item p { padding-left: 0; text-align: center; }
-    .category-header { justify-content: center; }
-}
-
-#howItWorksVideo {
-    object-fit: contain;
-}
-#demoVideo {
-    object-fit: contain;
 }
 
 /* --- PRELOADER STYLES --- */
