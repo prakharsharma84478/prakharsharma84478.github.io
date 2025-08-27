@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetPanels();
             }
         });
-    }, { threshold: 0.75 });
+    }, { threshold: 0.2 });
 
     featureSectionObserver.observe(featureSection);
 });

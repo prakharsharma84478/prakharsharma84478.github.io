@@ -197,7 +197,7 @@ h2 {
 
 .interactive-panels {
     display: flex;
-    flex-direction: row; 
+    flex-direction: column; 
     height: 100%;
 }
 
