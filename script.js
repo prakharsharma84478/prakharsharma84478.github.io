@@ -181,16 +181,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners for Mobile vs Desktop ---
 
     if (isTouchDevice) {
-        // MOBILE: Click to expand/collapse
+        // MOBILE: Click to expand/collapse and play/pause
         panels.forEach(panel => {
             panel.addEventListener('click', () => {
                 if (!isFeatureSectionVisible) return;
 
                 const isActive = panel.classList.contains('active');
+                const video = panel.querySelector('.panel-video');
+
                 if (isActive) {
                     resetPanels();
+                    pauseVideo(video);
                 } else {
+                    // This is the restored logic from the working version.
+                    // It pauses all other videos before activating and playing the new one.
+                    pauseVideo(demoVideo);
+                    pauseVideo(howItWorksVideo);
                     setActivePanel(panel);
+                    playVideo(video);
                 }
             });
         });
@@ -213,10 +221,11 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 isFeatureSectionVisible = true;
-                // THIS IS THE CHANGE: Autoplay on ALL devices when section is visible.
-                // Muted videos are allowed to autoplay in most modern browsers.
-                playVideo(demoVideo);
-                playVideo(howItWorksVideo);
+                // On DESKTOP, autoplay both videos for the continuous playback effect.
+                if (!isTouchDevice) {
+                    playVideo(demoVideo);
+                    playVideo(howItWorksVideo);
+                }
             } else {
                 isFeatureSectionVisible = false;
                 // When not visible, pause everything on all devices.
