@@ -13,6 +13,10 @@
 </head>
 <body>
 
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
     <header class="main-header">
         <a href="#home" class="logo">Fitpixels</a>
         <nav class="main-nav">
@@ -45,14 +49,14 @@
     <section id="feature-one" class="section-interactive-split hidden">
 
         <div class="interactive-panels">
-            <div class="panel" id="panel-video">
+            <div class="panel" id="panel-video-demo">
                 <div class="panel-content">
                     <h3>See It In Action</h3>
                     <p>Watch a real-time demo of the Fitpixels experience.</p>
-                    <video loop muted playsinline class="panel-video">
-                        <source src="https://github.com/prakharsharma84478/prakharsharma84478.github.io/raw/main/Demo%20Recording.mp4" type="video/mp4">
-                    </video>
                 </div>
+                <video autoplay loop muted playsinline class="panel-video" id="demoVideo" poster="Demo_Recording_Screenshot.jpg">
+                    <source src="https://github.com/prakharsharma84478/prakharsharma84478.github.io/raw/main/Demo%20Recording.mp4" type="video/mp4">
+                </video>
             </div>
             <div class="panel" id="panel-video-howitworks">
                 <div class="panel-content">
