@@ -133,21 +133,6 @@ downloadModal.addEventListener('click', (e) => {
 // --- JAVASCRIPT LOGIC FOR "READ MORE" AND INTERACTIVE PANELS ---
 document.addEventListener('DOMContentLoaded', () => {
     
-    const categoryItems = document.querySelectorAll('.category-item');
-    categoryItems.forEach(item => {
-        const p = item.querySelector('p');
-        if (p && p.scrollHeight > (3.2 * 16)) {
-            p.classList.add('collapsed');
-            const readMoreBtn = document.createElement('span');
-            readMoreBtn.className = 'read-more-btn';
-            readMoreBtn.textContent = 'Read More';
-            item.appendChild(readMoreBtn);
-            readMoreBtn.addEventListener('click', () => {
-                p.classList.toggle('collapsed');
-                readMoreBtn.textContent = p.classList.contains('collapsed') ? 'Read More' : 'Read Less';
-            });
-        }
-    });
 
     // --- INTERACTIVE PANELS LOGIC ---
     const featureSection = document.getElementById('feature-one');
