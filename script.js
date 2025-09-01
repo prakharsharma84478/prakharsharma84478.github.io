@@ -203,14 +203,26 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         // DESKTOP: Hover to play and expand
         panels.forEach(panel => {
-            panel.addEventListener('mouseenter', () => {
-                if (isFeatureSectionVisible) {
+        panel.addEventListener('mouseenter', () => {
+            if (isFeatureSectionVisible) {
+                // Check if the panel is not already active to prevent re-triggering
+                if (!panel.classList.contains('active')) {
                     setActivePanel(panel);
                     const videoToPlay = panel.querySelector('.panel-video');
                     playVideo(videoToPlay);
+
+                    // --- REFINED SCROLL LOGIC ---
+                    // After a short delay, gently scroll to the top of the active panel.
+                    setTimeout(() => {
+                        panel.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 150); // 150ms delay gives the animation time to start
                 }
-            });
+            }
         });
+    });
         
         if (panelsContainer) {
             panelsContainer.addEventListener('mouseleave', () => {
